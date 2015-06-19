@@ -1,0 +1,13 @@
+{
+    "manifest_version": 2,
+    "name": "KinoPoisk extension",
+    "version": "1.0",
+    "description": "Cinema news",
+    "permissions": ["http://www.kinopoisk.ru/afisha/new/*"],
+    "browser_action": {
+        "default_title": "KinoPoisk extension",
+        "default_icon": "images/index.jpg",
+        "default_popup": "html/popup.html"
+    }
+    
+}
