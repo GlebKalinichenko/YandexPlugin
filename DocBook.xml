@@ -1,0 +1,246 @@
+﻿<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V5.0//EN"
+"http://www.oasis-open.org/docbook/xml/5.0/docbook.dtd">
+
+<book lang="ru">
+  <title>YandexExtension</title>
+  <subtitle>Расширение для Yandex браузера</subtitle>
+  <bookinfo lang="ru" id="bookinfo">
+    <author>
+      <firstname>Глеб</firstname>
+      <surname>Калиниченко</surname>
+      <email>Glebjn@yandex.ua</email>
+    </author>
+    <date>2015.05.14</date>
+
+    <revhistory>
+      <revision>
+        <revnumber>0.1</revnumber>
+        <date>2015.05.14</date>
+        <revdescription>
+          <para>
+            Добавлено описание разработанного продукта
+          </para>
+        </revdescription>
+      </revision>
+    </revhistory>
+  </bookinfo>
+
+  <chapter lang="ru">
+    <title>Краткое описание YandexExtension</title>
+    <sect1>
+
+      <sect2>
+        <title>Возможности</title>
+        <para>
+          <itemizedlist>
+            <listitem>
+              <para>
+                Отслеживание появления новых фильмов в кинотеатрах
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Поиск фильмов по жанру фильма
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Поиск дополнительной информации о актерах и режессерах фильмах
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Просмотр информации касающейся кассовых сборов
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Просмотр рейтинг фильмов понравившихся пользователям
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </sect2>
+
+      <sect2>
+        <title>Использование</title>
+        <para> 
+          <orderedlist>
+            <listitem>
+              <para>
+                Откройте Yandex.Browser
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                В строке браузера пропишите browser://extensions/
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Нажмите на кнопку "Загрузка распакованного расширения"
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Выберите каталог с расширением
+              </para>
+            </listitem>
+          </orderedlist>
+        </para>
+      </sect2>
+
+      <sect2>
+        <title>Используемые библиотеки</title>
+        <para>
+          <itemizedlist>
+            <listitem>
+              <para>
+                <ulink url="http://jquery.com/">JQuery</ulink>
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </sect2>
+
+    </sect1>
+    
+  </chapter>
+
+  <chapter>
+        <title>Сценарии работы расширения</title>
+        <para>
+            В данной главе представлены основные сценарии работы расширения для Yandex.Browser.
+        </para>
+
+        <section>
+            <title>
+                  Вывод контента для просмотра списка самых популярных актерах и режессерах 
+                  и создание перехода для просмотра дополнительной информации.  
+            </title>
+            <para>
+                Функция принимает массив в котором хранится общая информация об актерах и режиссерах, после
+                функция реорганизует данные в отдельные массивы в которых храняться имена актеров и ссылки 
+                на которых хранится дополнительная информация и них. Функция вывод информацию об актерах 
+                и режиссерах в таблицу actors. Пользователь может просмотреть дополнительную информацию
+                для этого нужно выбрать на ссылку соответствущего актера или режессера.  
+            </para>
+            <example>
+                <title>Content about actors and directors</title>
+                <programlisting>
+                <![CDATA[
+                    inset.each(function(index){
+                      actoDirectorLinkList.push($(this).attr('href'));
+                    });
+                    for (var i = 0; i < 15; i++){
+                      actorList.push(inset[i].innerText);
+                      actorLinkList.push(actoDirectorLinkList[i]);
+                    }
+                    for (var i = 15; i < 30; i++){
+                      directorList.push(inset[i].innerText);
+                      directorLinkList.push(actoDirectorLinkList[i]);
+                    }
+                    //pouring tables actors and directors
+                    for (var m = 0; m < actorList.length; m++){
+                      //pouring table of actors
+                      $('#actorfield').append('<a href="http://www.kinopoisk.ru' + 
+                      actorLinkList[m] + '" target="_blank">' + actorList[m] + '</a>' + '<br>');
+                    }
+                    for (var m = 0; m < directorList.length; m++){
+                      //pouring table of directors
+                      $('#directorfield').append('<a href="http://www.kinopoisk.ru' + directorLinkList[m] + '" target="_blank">' + directorList[m] + '</a>' + '<br>');
+                    } 
+                ]]>
+                </programlisting>
+            </example>
+        </section>
+
+        <section>
+            <title>
+                  Вывод контента для просмотра топ-10 фильмов и создание перехода
+                  для просмотра дополнительной информации. 
+            </title>
+            <para>
+                Функция осуществляет динамическое заполнение таблицы в которой отображается
+                информация о топ-10 фильмах с его изображением и ссылкой на дополнительную информацию.
+            </para>
+            <example>
+                <title>Show content about films and that rating</title>
+                <programlisting language="JavaScript">
+                <![CDATA[
+                    names.each(function(index){
+                      a.push($( this ).text());
+                      var title = '<a href="http://www.kinopoisk.ru' + linkArray[index] + '" target="_blank">' + a[index] + '</a>';
+                      var im = '<img src="' + imagesArray[index] + '" height="70" width="70"></img>';
+                      var table = document.getElementById('lidercinema'); 
+                      var rowCount = table.rows.length; 
+                      var row = table.insertRow(rowCount); 
+                      var cell1 = row.insertCell(0);
+                      cell1.style.textAlign = "center";
+                      cell1.style.display = "block";
+                      cell1.style.width = "300px";
+                      cell1.style.height = "55px";
+                      cell1.style.color = "#3e94ec";  
+                      cell1.style.textDecoration = "none";
+                      cell1.style.fontWeight = "700";
+                      cell1.innerHTML = $( this ).text() + '</br>' + directorCinema[index];
+                      var cell2 = row.insertCell(1);
+                      cell2.style.textAlign = "center";
+                      cell2.style.display = "block";
+                      cell2.style.width = "120px";
+                      cell2.style.height = "55px";
+                      cell2.style.color = "#67acc2";  
+                      cell2.style.textDecoration = "none";
+                      cell2.style.fontWeight = "700";
+                      cell2.innerHTML = title + '</br>' + im;
+                    });
+                ]]>
+                </programlisting>
+            </example>
+        </section>
+
+         <section>
+            <title>Просмотр контента о фильмах и его рейтинге</title>
+            <para>
+                Функция осуществляет динамическое заполнение таблицы в которой отображается
+                информация о фильмах и его рейтинге популярности.
+            </para>
+            <example>
+                <title>Show content about films and that rating</title>
+                <programlisting language="JavaScript">
+                <![CDATA[
+                    for (var m = 0; m < 5; m++){
+                      todayCinema.push(value[m].innerText);
+                      ratingCinema.push(rating[m].innerText);
+                      /*$('#tdname').append('</br>' + todaycinema[m]);
+                      $('#tdrating').append('</br>' + ratingcinema[m]);*/
+                      var table = document.getElementById('cinema'); 
+                      var rowCount = table.rows.length; 
+                      var row = table.insertRow(rowCount); 
+                      var cell1 = row.insertCell(0);
+                      cell1.style.textAlign = "left";
+                      cell1.style.display = "block";
+                      cell1.style.width = "300px";
+                      cell1.style.height = "55px";
+                      cell1.style.color = "#3e94ec";  
+                      cell1.style.textDecoration = "none";
+                      cell1.style.fontWeight = "700"; 
+                      cell1.innerText = todayCinema[m];
+                      var cell2 = row.insertCell(1);
+                      cell2.style.textAlign = "center";
+                      cell2.style.display = "block";
+                      cell2.style.width = "120px";
+                      cell2.style.height = "55px";
+                      cell2.style.color = "#3e94ec";  
+                      cell2.style.textDecoration = "none";
+                      cell2.style.fontWeight = "700";  
+                      cell2.innerText = ratingCinema[m];
+                    }
+                ]]>
+                </programlisting>
+            </example>
+        </section>
+    </chapter>
+
+</book>
